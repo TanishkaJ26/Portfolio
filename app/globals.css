@@ -1,0 +1,355 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Design system — "Dusk"
+
+   Near-black ground, one soft pink, Syne for display. Restraint is the
+   point: pink marks the section label, the current nav item, the hovered
+   item, and one primary button per screen. Nothing else.
+   --------------------------------------------------------------- */
+
+:root {
+  --ground: #0b0a10;
+  --surface: #121118;
+  --raised: #18161f;
+
+  --line: #24222c;
+  --line-lit: #34313d;
+  --line-pattern: #17151e; /* dot-grid ground, quieter than --line */
+
+  --text: #edebf0;
+  --text-dim: #a9a5b3; /* 8.1:1 on --ground */
+  --text-mute: #7e7a89; /* 4.8:1 on --ground — the floor for readable text */
+
+  --pink: #f26ba4;
+  --pink-soft: #f9c1d9; /* code spans only */
+  --pink-wash: rgba(242, 107, 164, 0.16);
+
+  --font-display: var(--font-syne), system-ui, sans-serif;
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --gutter: clamp(1.5rem, 4.5vw, 4rem);
+  --measure: 68ch;
+}
+
+/* Tailwind v4 theme bridge — exposes the tokens as real utilities. */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-line-lit: var(--line-lit);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-mute: var(--text-mute);
+  --color-pink: var(--pink);
+  --color-pink-soft: var(--pink-soft);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* Base styles go in @layer base so that Tailwind's utilities — which live
+   in @layer utilities — can override them. Unlayered CSS beats every
+   layered rule regardless of specificity, and an unlayered
+   `a { color: inherit }` silently killed every text-* utility on a link. */
+@layer base {
+  /* ------------------------------ reset ------------------------------ */
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  /* Lenis owns scrolling once it mounts; native smooth would fight it. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  img,
+  picture,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ::selection {
+    background: var(--pink);
+    color: var(--ground);
+  }
+
+  /* ---------------------------- base type ---------------------------- */
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    color: var(--pink-soft);
+    background: var(--raised);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+
+  /* ------------------------------ focus ------------------------------ */
+
+  :focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+/* Helper classes go in @layer components so a utility can still win. */
+@layer components {
+  /* --------------------------- utilities ----------------------------- */
+
+  .shell {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    max-width: 96rem;
+  }
+
+  /* The 12px mono caps label used for every section head and readout. */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+
+  /* Patterns. Always behind content, never louder than a hairline. */
+  .dot-grid {
+    background-image: radial-gradient(var(--line-pattern) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .line-grid {
+    background-image:
+      linear-gradient(#1a1822 1px, transparent 1px),
+      linear-gradient(90deg, #1a1822 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Screen-reader-only, visible on focus (skip link). */
+  .sr-only-focusable {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .sr-only-focusable:focus {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 100;
+    width: auto;
+    height: auto;
+    padding: 0.75rem 1.25rem;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    background: var(--surface);
+    border: 1px solid var(--line-lit);
+    border-radius: 6px;
+  }
+}
+
+/* -------------------------- reduced motion -------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 200ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Intro choreography — CSS, not JS.
+
+   The hero must not wait for hydration to paint: doing so put ~3.5s of
+   render delay in front of the LCP element on a throttled phone. All of
+   this runs off the stylesheet, so the hero paints on the first frame and
+   the whole sequence is over in ~0.62s.
+
+   `data-intro` is set by a tiny blocking script in <head> before first
+   paint: "play" (first visit, motion allowed) or "skip".
+   --------------------------------------------------------------- */
+
+@keyframes intro-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes intro-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes preload-wipe {
+  0%,
+  42% {
+    clip-path: inset(0 0 0% 0);
+  }
+  100% {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes preload-draw-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---- playing ---- */
+
+html[data-intro="play"] .intro-rise {
+  transform: translateY(110%);
+  animation: intro-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1)
+    var(--intro-delay, 0s) both;
+}
+
+html[data-intro="play"] .intro-fade-up {
+  opacity: 0;
+  animation: intro-fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1)
+    var(--intro-delay, 0s) both;
+}
+
+html[data-intro="play"] .intro-fade {
+  opacity: 0;
+  animation: intro-fade 0.45s cubic-bezier(0.16, 1, 0.3, 1)
+    var(--intro-delay, 0s) both;
+}
+
+html[data-intro="play"] .preloader {
+  animation: preload-wipe 0.62s cubic-bezier(0.83, 0, 0.17, 1) both;
+  pointer-events: none;
+}
+
+html[data-intro="play"] .preload-rule {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: preload-draw-x 0.5s cubic-bezier(0.16, 1, 0.3, 1)
+    var(--intro-delay, 0s) both;
+}
+
+/* ---- skipped: repeat visit this session, or reduced motion ---- */
+
+html[data-intro="skip"] .preloader {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    display: none;
+  }
+
+  html[data-intro="play"] .intro-rise,
+  html[data-intro="play"] .intro-fade-up,
+  html[data-intro="play"] .intro-fade {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
