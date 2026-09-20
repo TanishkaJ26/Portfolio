@@ -1,3 +1,5 @@
+import { GLYPHS, type GlyphName } from "@/lib/pixel-art";
+import { Pixel } from "@/components/ui/pixel";
 import { RevealText } from "@/components/ui/reveal-text";
 
 type SectionHeaderProps = {
@@ -10,6 +12,8 @@ type SectionHeaderProps = {
   heading: React.ReactNode;
   /** Small right-aligned note — a date range, or a line about the motion. */
   aside?: string;
+  /** Pixel mark in front of the label. Inherits the label's pink. */
+  glyph?: GlyphName;
 };
 
 /**
@@ -23,11 +27,15 @@ export function SectionHeader({
   id,
   heading,
   aside,
+  glyph,
 }: SectionHeaderProps) {
   return (
     <div className="mb-12 flex flex-col gap-6 sm:mb-16 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
       <div className="flex flex-col gap-3.5">
-        <span className="label text-pink">
+        <span className="label flex items-center gap-2 text-pink">
+          {glyph ? (
+            <Pixel art={GLYPHS[glyph]} className="h-3.5 w-3.5 shrink-0" />
+          ) : null}
           {index} — {label}
         </span>
         <h2

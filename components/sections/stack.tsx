@@ -4,7 +4,9 @@ import * as m from "motion/react-m";
 import { useState } from "react";
 
 import { Experience } from "@/components/sections/experience";
+import { Pixel } from "@/components/ui/pixel";
 import { Rings } from "@/components/ui/patterns";
+import { techGlyph } from "@/lib/pixel-art";
 import { SectionHeader } from "@/components/ui/section-header";
 import { stack } from "@/content/stack";
 import { ease, inView, stagger } from "@/lib/motion";
@@ -14,6 +16,11 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
  * Stack and experience share a screen: a typographic index on the left, the
  * timeline on the right. Hovering an item lights it and dims its siblings —
  * a colour transition only, so nothing reflows.
+ *
+ * Each item carries a 12x12 pixel glyph drawn in `currentColor`, so the same
+ * one colour change lights the mark along with the word. The glyph sits at
+ * 0.78em and is held a little under full strength: twenty-six of them at text
+ * brightness would read as a toolbar rather than as an index.
  */
 export function Stack() {
   const reduce = useReducedMotion();
@@ -37,6 +44,7 @@ export function Stack() {
             id="stack-heading"
             index="03"
             label="Stack"
+            glyph="terminal"
             heading="What I reach for."
           />
 
@@ -71,7 +79,7 @@ export function Stack() {
                     >
                       <span
                         onPointerEnter={() => setHovered(item)}
-                        className="cursor-default text-[clamp(1.125rem,1.9vw,1.625rem)] tracking-[-0.015em] transition-colors duration-200"
+                        className="inline-flex cursor-default items-center gap-2 text-[clamp(1.125rem,1.9vw,1.625rem)] tracking-[-0.015em] transition-colors duration-200"
                         style={{
                           color:
                             hovered === null
@@ -81,6 +89,11 @@ export function Stack() {
                                 : "var(--text-mute)",
                         }}
                       >
+                        <Pixel
+                          art={techGlyph(item)}
+                          className="h-[0.78em] w-[0.78em] shrink-0 transition-opacity duration-200"
+                          style={{ opacity: hovered === item ? 1 : 0.72 }}
+                        />
                         {item}
                       </span>
                     </m.li>

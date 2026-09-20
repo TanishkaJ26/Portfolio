@@ -1,7 +1,9 @@
 "use client";
 
-import { ArrowUp } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { GLYPHS, type GlyphName } from "@/lib/pixel-art";
+import { Pixel } from "@/components/ui/pixel";
 
 const IST = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Asia/Kolkata",
@@ -24,9 +26,9 @@ export function Footer() {
   return (
     <footer className="border-t border-line">
       <div className="shell label grid gap-4 py-7 text-text-mute sm:grid-cols-2 lg:grid-cols-4">
-        <span>© 2026 Tanishka Jangir</span>
-        <span>Built with Next.js</span>
-        <span>
+        <Cell glyph="networks">© 2026 Tanishka Jangir</Cell>
+        <Cell glyph="next">Built with Next.js</Cell>
+        <Cell glyph="clock">
           New Delhi ·{" "}
           <span
             suppressHydrationWarning
@@ -35,20 +37,34 @@ export function Footer() {
             {time ?? "--:--:--"}
           </span>{" "}
           IST
-        </span>
+        </Cell>
         <a
           href="#top"
           className="group flex items-center gap-2 text-text transition-colors hover:text-pink lg:justify-end"
         >
           Back to top
-          <ArrowUp
-            size={12}
-            strokeWidth={2.5}
-            aria-hidden="true"
-            className="text-pink transition-transform group-hover:-translate-y-0.5"
+          <Pixel
+            art={GLYPHS.arrowUp}
+            className="h-3 w-3 shrink-0 text-pink transition-transform group-hover:-translate-y-0.5"
           />
         </a>
       </div>
     </footer>
+  );
+}
+
+/** A footer readout: pixel mark, then the text. */
+function Cell({
+  glyph,
+  children,
+}: {
+  glyph: GlyphName;
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="flex items-center gap-2">
+      <Pixel art={GLYPHS[glyph]} className="h-3 w-3 shrink-0 opacity-70" />
+      <span>{children}</span>
+    </span>
   );
 }

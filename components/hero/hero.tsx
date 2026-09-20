@@ -1,11 +1,16 @@
 import type { CSSProperties } from "react";
 import { ArrowDown } from "lucide-react";
 
+import { GLYPHS, type GlyphName } from "@/lib/pixel-art";
 import { HeroBackdrop } from "@/components/hero/hero-backdrop";
+import { Pixel } from "@/components/ui/pixel";
 import { site } from "@/content/site";
 
 const delay = (seconds: number) =>
   ({ "--intro-delay": seconds + "s" }) as CSSProperties;
+
+/** One pixel mark per hero readout, in the order `site.readouts` lists them. */
+const READOUT_GLYPHS: readonly GlyphName[] = ["cap", "terminal", "mail"];
 
 /**
  * Server component. Every word here is in the HTML on the first byte and the
@@ -68,15 +73,37 @@ export function Hero() {
         className="intro-fade label mt-auto grid gap-3 border-t border-line pt-6 text-text-mute sm:grid-cols-3 sm:gap-4"
         style={delay(0.4)}
       >
-        <span>{site.readouts[0]}</span>
-        <span className="hidden sm:block sm:text-center">
+        <span className="flex items-center gap-2">
+          <Mark index={0} />
+          {site.readouts[0]}
+        </span>
+        <span className="hidden items-center gap-2 sm:flex sm:justify-center">
+          <Mark index={1} />
           {site.readouts[1]}
         </span>
         <span className="flex items-center gap-2 sm:justify-end">
-          <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-pink" />
+          <Mark index={2} pink />
           {site.readouts[2]}
         </span>
       </div>
     </HeroBackdrop>
+  );
+}
+
+/**
+ * Static SVG in the server-rendered hero: it is in the HTML on the first byte
+ * like the rest of this component, so it costs nothing at hydration.
+ */
+function Mark({ index, pink = false }: { index: number; pink?: boolean }) {
+  const glyph = READOUT_GLYPHS[index];
+  if (!glyph) return null;
+
+  return (
+    <Pixel
+      art={GLYPHS[glyph]}
+      className={
+        "h-3.5 w-3.5 shrink-0 " + (pink ? "text-pink" : "text-line-lit")
+      }
+    />
   );
 }

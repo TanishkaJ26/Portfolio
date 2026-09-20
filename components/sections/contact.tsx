@@ -4,7 +4,9 @@ import { ArrowUpRight, Download } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { useEffect, useState } from "react";
 
+import { GLYPHS, type GlyphName } from "@/lib/pixel-art";
 import { Magnetic } from "@/components/ui/magnetic";
+import { Pixel } from "@/components/ui/pixel";
 import { RevealText } from "@/components/ui/reveal-text";
 import { Rings, Wash } from "@/components/ui/patterns";
 import { site } from "@/content/site";
@@ -31,7 +33,10 @@ export function Contact() {
 
       <div className="shell relative">
         <div className="mb-12 flex flex-col gap-3.5">
-          <span className="label text-pink">05 — Contact</span>
+          <span className="label flex items-center gap-2 text-pink">
+            <Pixel art={GLYPHS.mail} className="h-3.5 w-3.5 shrink-0" />
+            05 — Contact
+          </span>
           <h2
             id="contact-heading"
             className="max-w-[26ch] text-[clamp(1.5rem,2.6vw,2rem)] leading-[1.25] font-semibold text-text-dim"
@@ -65,11 +70,16 @@ export function Contact() {
         </div>
 
         <ul className="flex flex-wrap gap-3">
-          <ContactLink href={site.links.linkedin} label="LinkedIn" />
-          <ContactLink href={site.links.github} label="GitHub" />
+          <ContactLink
+            href={site.links.linkedin}
+            label="LinkedIn"
+            glyph="linkedin"
+          />
+          <ContactLink href={site.links.github} label="GitHub" glyph="cat" />
           <ContactLink
             href={site.links.resume}
             label="Résumé"
+            glyph="doc"
             event="resume-open"
             download
           />
@@ -82,11 +92,14 @@ export function Contact() {
 function ContactLink({
   href,
   label,
+  glyph,
   event,
   download = false,
 }: {
   href: string;
   label: string;
+  /** The pixel mark on the left. The lucide arrow on the right stays. */
+  glyph: GlyphName;
   /** Fires a custom analytics event on click — used to count résumé opens. */
   event?: string;
   download?: boolean;
@@ -101,8 +114,12 @@ function ContactLink({
           target="_blank"
           rel="noopener noreferrer"
           onClick={event ? () => track(event) : undefined}
-          className="group inline-flex items-center gap-2.5 rounded-md border border-line-lit px-5 py-3.5 font-sans text-[0.9375rem] font-medium transition-colors duration-200 hover:border-pink"
+          className="group inline-flex items-center gap-2.5 rounded-md border border-line-lit py-3.5 pr-5 pl-4 font-sans text-[0.9375rem] font-medium transition-colors duration-200 hover:border-pink"
         >
+          <Pixel
+            art={GLYPHS[glyph]}
+            className="h-4 w-4 shrink-0 text-text-mute transition-colors duration-200 group-hover:text-text"
+          />
           {label}
           <Icon
             size={14}

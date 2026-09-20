@@ -1,4 +1,6 @@
 import { Contours } from "@/components/ui/patterns";
+import { GLYPHS } from "@/lib/pixel-art";
+import { Pixel } from "@/components/ui/pixel";
 import { ProjectPanel } from "@/components/work/project-panel";
 import { SectionHeader } from "@/components/ui/section-header";
 import { projects } from "@/content/projects";
@@ -17,6 +19,7 @@ export function Work() {
           id="work-heading"
           index="01"
           label="Selected work"
+          glyph="cube"
           heading="Two builds, and what broke."
           aside="2025 — 2026"
         />
@@ -36,8 +39,9 @@ export function Work() {
             href="https://github.com/TanishkaJ26"
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-pink"
+            className="flex items-center gap-2 transition-colors hover:text-pink"
           >
+            <Pixel art={GLYPHS.cat} className="h-3.5 w-3.5 shrink-0" />
             Source on GitHub ↗
           </a>
         </div>

@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
 
+import { GLYPHS } from "@/lib/pixel-art";
+import { Pixel } from "@/components/ui/pixel";
 import { PreloadCounter } from "@/components/ui/preload-counter";
 import { site } from "@/content/site";
 
@@ -28,7 +30,10 @@ export function Preloader() {
           style={delay(0.06)}
         />
         <div className="flex items-end justify-between gap-6">
-          <span className="label text-text-mute">{site.name}</span>
+          <span className="label flex items-center gap-2.5 text-text-mute">
+            <Pixel art={GLYPHS.networks} className="h-4 w-4 shrink-0" />
+            {site.name}
+          </span>
           <div className="flex items-baseline gap-2.5">
             <PreloadCounter />
             <span className="label text-text-mute">/ 100</span>

@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+import { GLYPHS } from "@/lib/pixel-art";
 import { Magnetic } from "@/components/ui/magnetic";
+import { Pixel } from "@/components/ui/pixel";
 import { ScrollProgress } from "@/components/layout/scroll-progress";
 import { nav, site } from "@/content/site";
 
@@ -70,10 +72,15 @@ export function Nav() {
         aria-label="Primary"
         className="shell flex h-16 items-center justify-between gap-6"
       >
-        <a href="#top" className="label flex items-center gap-2.5 text-text">
-          <span
-            aria-hidden="true"
-            className="h-1.5 w-1.5 shrink-0 rounded-full bg-pink"
+        <a
+          href="#top"
+          className="group label flex items-center gap-2.5 text-text"
+        >
+          {/* The site mark: the same node-graph motif the patterns and the
+              hero canvas draw, at 12x12. */}
+          <Pixel
+            art={GLYPHS.networks}
+            className="h-4 w-4 shrink-0 text-line-lit transition-colors duration-200 group-hover:text-pink"
           />
           <span className="hidden sm:inline">{site.name}</span>
           <span className="sm:hidden">TJ</span>

@@ -6,6 +6,8 @@ import { useMotionValue, useSpring, useTransform } from "motion/react";
 import { useRef, useState } from "react";
 
 import { NodeGraphMark } from "@/components/ui/patterns";
+import { Pixel } from "@/components/ui/pixel";
+import { SPOTLIGHT_SCENE, WANDERLUST_SCENE } from "@/lib/pixel-art";
 import { ease, inView } from "@/lib/motion";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import type { Project } from "@/types";
@@ -19,15 +21,36 @@ type ProjectPreviewProps = {
  * what makes it read as expensive rather than as a fade. A few degrees of
  * cursor tilt on top, killed on touch and under reduced motion.
  *
- * While `image.pending` is set the frame shows a line grid and a graph mark
- * instead of an image, so the layout is honest about what is missing. Drop the
- * screenshot in, remove the flag, and the real thing takes over with no other
- * change.
+ * While `image.pending` is set the frame shows a pixel-art scene of the
+ * product instead of an image — drawn, captioned as pending, and sized to the
+ * same aspect ratio, so the layout is honest about what is missing without
+ * being a grey rectangle. Drop the screenshot in, remove the flag, and the
+ * real thing takes over with no other change.
  */
+
+/**
+ * Keyed by `image.scene` so the content layer names a scene without importing
+ * one. A project with no scene named falls back to the graph mark.
+ */
+const SCENES = {
+  spotlight: {
+    art: SPOTLIGHT_SCENE,
+    title:
+      "Pixel illustration of a webinar console: a stream pane with a play " +
+      "marker, a live chat column and a room of attendees.",
+  },
+  wanderlust: {
+    art: WANDERLUST_SCENE,
+    title:
+      "Pixel illustration of a map: mountain peaks, pines, a cabin listing " +
+      "and a dropped location pin.",
+  },
+} as const;
 export function ProjectPreview({ image }: ProjectPreviewProps) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const [tiltEnabled, setTiltEnabled] = useState(false);
+  const scene = image.scene ? SCENES[image.scene] : undefined;
 
   const px = useMotionValue(0);
   const py = useMotionValue(0);
@@ -83,14 +106,24 @@ export function ProjectPreview({ image }: ProjectPreviewProps) {
         }}
       >
         {image.pending ? (
-          // No <img> at all until there is a real screenshot: an empty frame
-          // that says so beats a grey rectangle pretending to be a product.
+          // No <img> at all until there is a real screenshot. The scene is
+          // capped rather than stretched to the frame: at full width a 32-wide
+          // grid gives 22px pixels, which reads as broken rather than as art.
           <div
-            className="flex flex-col items-center justify-center gap-4 px-6 text-center"
+            className="flex flex-col items-center justify-center gap-6 px-6 py-8 text-center"
             style={{ aspectRatio: `${image.width} / ${image.height}` }}
           >
-            <NodeGraphMark className="h-[70px] w-auto" />
-            <span className="label max-w-[36ch] text-text-mute">
+            {scene ? (
+              <Pixel
+                art={scene.art}
+                title={scene.title}
+                className="h-auto w-full max-w-[420px]"
+                style={{ color: "var(--text-dim)" }}
+              />
+            ) : (
+              <NodeGraphMark className="h-[70px] w-auto" />
+            )}
+            <span className="label max-w-[40ch] text-text-mute">
               Screenshot pending — drop it at {image.src}
             </span>
           </div>

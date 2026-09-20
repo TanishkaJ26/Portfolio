@@ -3,7 +3,9 @@
 import * as m from "motion/react-m";
 import { ArrowUpRight } from "lucide-react";
 
-import { PortraitGraph, Rings } from "@/components/ui/patterns";
+import { DESK_SCENE, GLYPHS } from "@/lib/pixel-art";
+import { Pixel } from "@/components/ui/pixel";
+import { Rings } from "@/components/ui/patterns";
 import { SectionHeader } from "@/components/ui/section-header";
 import { about, stats } from "@/content/about";
 import { ease, inView } from "@/lib/motion";
@@ -25,6 +27,7 @@ export function About() {
           id="about-heading"
           index="02"
           label="About"
+          glyph="pin"
           heading={
             <>
               Most application work treats the network as a flat, reliable
@@ -35,8 +38,13 @@ export function About() {
 
         <div className="grid gap-12 border-t border-line pt-10 lg:grid-cols-[300px_minmax(0,1fr)_minmax(0,1fr)] lg:gap-12">
           <div className="flex flex-col gap-4">
+            {/* The portrait slot. A pixel-art desk holds the frame until
+                there is a photograph — honest about being a stand-in, and
+                more worth looking at than a grey rectangle. `color` is set
+                here because the scene's outlines are drawn in currentColor;
+                its screens, code lines and slab use fixed tokens. */}
             <m.div
-              className="relative h-[360px] overflow-hidden rounded-xl border border-line bg-surface"
+              className="line-grid relative h-[360px] overflow-hidden rounded-xl border border-line bg-surface"
               initial={
                 reduce
                   ? { opacity: 0, clipPath: "inset(0% 0 0 0)" }
@@ -47,16 +55,21 @@ export function About() {
               transition={{ duration: reduce ? 0.2 : 1, ease: ease.out }}
             >
               <m.div
-                className="h-full w-full"
+                className="flex h-full w-full items-center justify-center px-6 pt-4 pb-12"
                 initial={reduce ? { scale: 1 } : { scale: 1.08 }}
                 whileInView={{ scale: 1 }}
                 viewport={inView}
                 transition={{ duration: 1.1, ease: ease.out }}
               >
-                <PortraitGraph className="h-full w-full" />
+                <Pixel
+                  art={DESK_SCENE}
+                  title="Pixel illustration of a desk: a monitor showing code, a keyboard, a mug, a plant and a tower under the desk."
+                  className="h-auto w-full max-w-[248px]"
+                  style={{ color: "var(--text-dim)" }}
+                />
               </m.div>
               <span className="label absolute inset-x-0 bottom-0 bg-gradient-to-t from-surface via-surface/90 to-transparent pt-8 pb-4 text-center text-text-mute">
-                Portrait — or keep the graph
+                Portrait pending — the desk, meanwhile
               </span>
             </m.div>
 
@@ -66,7 +79,13 @@ export function About() {
                   key={stat.label}
                   className="flex flex-col gap-1 border-t border-line pt-2"
                 >
-                  <dt className="label text-text-mute">{stat.label}</dt>
+                  <dt className="label flex items-center gap-1.5 text-text-mute">
+                    <Pixel
+                      art={GLYPHS[stat.icon]}
+                      className="h-3 w-3 shrink-0"
+                    />
+                    {stat.label}
+                  </dt>
                   <dd className="label text-text">{stat.value}</dd>
                 </div>
               ))}

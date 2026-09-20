@@ -53,6 +53,7 @@ export const projects: readonly Project[] = [
       width: 1200,
       height: 750,
       pending: true,
+      scene: "spotlight",
     },
     links: {
       // TODO: confirm these are live before shipping. A dead demo is worse than none.
@@ -103,6 +104,7 @@ export const projects: readonly Project[] = [
       width: 1200,
       height: 750,
       pending: true,
+      scene: "wanderlust",
     },
     links: {
       demo: undefined,

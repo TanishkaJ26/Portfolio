@@ -5,7 +5,9 @@ import { useEffect, useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
 
 import { NodeGraph } from "@/components/ui/patterns";
+import { Pixel } from "@/components/ui/pixel";
 import { ProjectPreview } from "@/components/work/project-preview";
+import { techGlyph } from "@/lib/pixel-art";
 import { RevealText } from "@/components/ui/reveal-text";
 import { loadGsap } from "@/lib/lenis";
 import { ease, inView, stagger } from "@/lib/motion";
@@ -102,7 +104,7 @@ export function ProjectPanel({ project }: ProjectPanelProps) {
               {project.stack.map((tech, i) => (
                 <m.li
                   key={tech}
-                  className="label rounded-full border border-line-lit px-3 py-2 text-text-dim"
+                  className="label flex items-center gap-1.5 rounded-full border border-line-lit py-2 pr-3.5 pl-2.5 text-text-dim"
                   initial={
                     reduce ? { opacity: 0, y: 0 } : { opacity: 0, y: 10 }
                   }
@@ -114,6 +116,7 @@ export function ProjectPanel({ project }: ProjectPanelProps) {
                     delay: reduce ? 0 : i * stagger.base,
                   }}
                 >
+                  <Pixel art={techGlyph(tech)} className="h-3.5 w-3.5 shrink-0" />
                   {tech}
                 </m.li>
               ))}

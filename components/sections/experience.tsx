@@ -3,6 +3,8 @@
 import * as m from "motion/react-m";
 import { useEffect, useRef } from "react";
 
+import { GLYPHS } from "@/lib/pixel-art";
+import { Pixel } from "@/components/ui/pixel";
 import { experience } from "@/content/experience";
 import { loadGsap } from "@/lib/lenis";
 import { ease, inView, spring } from "@/lib/motion";
@@ -14,6 +16,11 @@ import {
 /**
  * The timeline, in the right column of the Stack section. The spine draws
  * downward scrubbed to scroll and each node pops as the line passes it.
+ *
+ * Each node is a pixel glyph in a tile rather than a dot — a briefcase, a
+ * cap, a flag. The tile is opaque so it interrupts the spine cleanly, and it
+ * sets `color`, which the glyph inherits: the current entry reads pink, the
+ * rest sit at the hairline.
  */
 export function Experience() {
   const reduce = useReducedMotion();
@@ -57,7 +64,10 @@ export function Experience() {
 
   return (
     <div className="flex flex-col gap-8 lg:pt-[7.5rem]">
-      <span className="label text-pink">04 — Experience &amp; leadership</span>
+      <span className="label flex items-center gap-2 text-pink">
+        <Pixel art={GLYPHS.briefcase} className="h-3.5 w-3.5 shrink-0" />
+        04 — Experience &amp; leadership
+      </span>
 
       <ol ref={listRef} className="relative flex flex-col gap-10 pl-7">
         {/* Spine — a track, plus a scrubbed fill drawn over it. */}
@@ -79,13 +89,18 @@ export function Experience() {
           <li key={entry.org} className="relative">
             <m.span
               aria-hidden="true"
-              className="absolute top-2 -left-7 h-2.5 w-2.5 -translate-x-1/2 rounded-full"
-              style={{ background: i === 0 ? "var(--pink)" : "var(--line-lit)" }}
+              className="absolute top-0.5 -left-7 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-md border bg-ground"
+              style={{
+                color: i === 0 ? "var(--pink)" : "var(--line-lit)",
+                borderColor: i === 0 ? "var(--pink)" : "var(--line)",
+              }}
               initial={reduce ? { opacity: 0, scale: 1 } : { scale: 0 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={inView}
               transition={reduce ? { duration: 0.2 } : spring}
-            />
+            >
+              <Pixel art={GLYPHS[entry.icon]} className="h-3.5 w-3.5" />
+            </m.span>
 
             <m.div
               className="flex flex-col gap-2"

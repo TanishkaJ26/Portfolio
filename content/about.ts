@@ -1,3 +1,5 @@
+import type { Stat } from "@/types";
+
 /**
  * ⚠ DRAFT COPY — three paragraphs written in your voice from what the spec
  * says about you. Rewrite the parts that aren't true. First person, no
@@ -10,9 +12,9 @@ export const about = [
 ] as const;
 
 /** The four readouts under the portrait. */
-export const stats = [
-  { label: "CGPA", value: "8.93 / 10" },
-  { label: "Shipped", value: "2 builds" },
-  { label: "Base", value: "New Delhi" },
-  { label: "Status", value: "Open to intern" },
-] as const;
+export const stats: readonly Stat[] = [
+  { label: "CGPA", value: "8.93 / 10", icon: "spark" },
+  { label: "Shipped", value: "2 builds", icon: "cube" },
+  { label: "Base", value: "New Delhi", icon: "pin" },
+  { label: "Status", value: "Open to intern", icon: "mail" },
+];
